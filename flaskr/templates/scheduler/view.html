@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Task Info{% endblock %}</h1>
+  <a class="action" href="{{ url_for('scheduler.index') }}">Home</a>
+{% endblock %}
+
+{% block content %}
+            {% if g.user['id'] == task['author_id'] %}
+              <article class="action">
+                <header 
+                  {% if maxtime > task['deadline'] %}
+                    {% if now > task['deadline'] %}
+                      style="background-color:rgba(255, 0, 0, 0.384);"
+                    {% endif %} 
+                  {% endif %}
+                >
+                <h1>{{ task['title'] }}</h1>
+                  <div>
+                    {% if task['body'] %}
+                    <p class="body">{{ task['body'] }}</p>
+                    {% endif %}
+                    {% if maxtime > task['deadline'] %}
+                    <p class="body">deadline: {{ task['deadline'] }}</p>
+                    {% endif %} 
+                    {% if task['filename'] %}
+                    <a class="action" href="{{ url_for('scheduler.download', id=task['id']) }}"><p class="body">{{ task['filename'] }}</p></a>
+                    {% endif %}
+                    <a class="action" href="{{ url_for('scheduler.finish', id=task['id']) }}">Finish</a>
+                    <a class="action" href="{{ url_for('scheduler.delete', id=task['id']) }}">Delete</a>
+
+                  </div>
+                </header>
+              </article>
+            {% endif %}
+      <hr>
+{% endblock %}

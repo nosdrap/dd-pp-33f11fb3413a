@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Tasks{% endblock %}</h1>
+  <a class="action" href="{{ url_for('scheduler.create') }}">New</a>
+  <a class="action" href="{{ url_for('scheduler.finished') }}">Finished</a>
+{% endblock %}
+
+{% block content %}
+  {% for task in tasks %}
+        {% if task['finished']==0 %}
+            {% if g.user['id'] == task['author_id'] %}
+              <article class="action">
+                <header 
+                  {% if task['deadline'] < maxtime %}
+                    {% if now > task['deadline'] %}
+                      style="background-color:rgba(255, 0, 0, 0.384);"
+                    {% endif %} 
+                  {% endif %}
+                >
+                <a class="action" href="{{ url_for('scheduler.view', id=task['id']) }}"><h1>{{ task['title'] }}</h1></a>
+                  <div>
+                    <!-- <p class="body">{{ task['body'] }}</p>
+                    <p class="body">created: {{ task['created'] }}</p> -->
+                    <!-- <p class="body">deadline: {{ task['deadline'] }}</p> -->
+                    <!-- <p class="body">currently: {{ now }}</p>
+                    {% if now > task['deadline'] %}
+                      <p class="body">you are late</p>
+                    {% endif %} -->
+                    <a class="action" href="{{ url_for('scheduler.finish', id=task['id']) }}">Finish</a>
+                    <a class="action" href="{{ url_for('scheduler.delete', id=task['id']) }}">Delete</a>
+                  </div>
+                </header>
+              </article>
+            {% endif %}
+        {% endif %}
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
+  {% endfor %}
+{% endblock %}

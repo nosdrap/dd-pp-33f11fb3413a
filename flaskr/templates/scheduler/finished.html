@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Tasks{% endblock %}</h1>
+  <a class="action" href="{{ url_for('scheduler.index') }}">Home</a>
+{% endblock %}
+
+{% block content %}
+  {% for task in tasks %}
+        {% if task['finished']==1 %}
+            {% if g.user['id'] == task['author_id'] %}
+              <article class="action">
+                <header>
+                <a class="action" href="{{ url_for('scheduler.view', id=task['id']) }}"><h1>{{ task['title'] }}</h1></a>
+                  <div>
+                    <a class="action" href="{{ url_for('scheduler.delete', id=task['id']) }}">Delete</a>
+                  </div>
+                </header>
+              </article>
+            {% endif %}
+        {% endif %}
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
+  {% endfor %}
+{% endblock %}
